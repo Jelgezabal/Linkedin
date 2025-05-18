@@ -1,3 +1,7 @@
+from pathlib import Path
+
+# HTML limpio sin iframe, usando fetch() al webhook correcto
+html_clean = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,9 +40,6 @@
     button:hover {
       background: #6b3fd4;
     }
-    iframe {
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -55,35 +56,43 @@
     </form>
   </div>
 
-  <!-- Formulario n8n oculto -->
-  <iframe id="formulario-n8n" src="https://paneln8n.jelge.vip/form/f7dd391f-4f62-416a-90b3-4c40416675f1" onload="setupAutoSubmit()" width="0" height="0"></iframe>
-
   <script>
-    function setupAutoSubmit() {
-      const iframe = document.getElementById("formulario-n8n");
-      const n8nForm = iframe.contentWindow.document.querySelector("form");
+    document.getElementById("fake-form").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      document.getElementById("fake-form").addEventListener("submit", function(e) {
-        e.preventDefault();
+      const email = document.getElementById("email").value;
+      const tema = document.getElementById("tema").value;
+      const objetivo = document.getElementById("objetivo").value;
 
-        // Rellenar campos en el formulario de n8n
-        const email = document.getElementById("email").value;
-        const tema = document.getElementById("tema").value;
-        const objetivo = document.getElementById("objetivo").value;
-
-        const inputs = iframe.contentWindow.document.querySelectorAll("input");
-
-        inputs[0].value = email;
-        inputs[1].value = tema;
-        inputs[2].value = objetivo;
-
-        // Enviar el formulario oculto
-        n8nForm.submit();
-
-        alert("¡Publicación generada con éxito!");
+      fetch("https://paneln8n.jelge.vip/webhook/f7dd391f-4f62-416a-90b3-4c40416675f1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "Email": email,
+          "Tema de la publicación": tema,
+          "Público Objetivo": objetivo
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("✅ Publicación enviada con éxito");
+        } else {
+          alert("❌ Error en el envío");
+        }
+      })
+      .catch(err => {
+        alert("❌ Error de red al enviar los datos");
       });
-    }
+    });
   </script>
 
 </body>
 </html>
+"""
+
+# Guardar archivo HTML limpio
+output_path_clean = Path("/mnt/data/index_formulario_linkedin.html")
+output_path_clean.write_text(html_clean, encoding="utf-8")
+output_path_clean
