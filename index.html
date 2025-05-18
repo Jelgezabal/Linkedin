@@ -1,7 +1,4 @@
-from pathlib import Path
 
-# HTML limpio sin iframe, usando fetch() al webhook correcto
-html_clean = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -90,9 +87,3 @@ html_clean = """
 
 </body>
 </html>
-"""
-
-# Guardar archivo HTML limpio
-output_path_clean = Path("/mnt/data/index_formulario_linkedin.html")
-output_path_clean.write_text(html_clean, encoding="utf-8")
-output_path_clean
