@@ -1,32 +1,59 @@
-<script>
-  document.getElementById("fake-form").addEventListener("submit", function(e) {
-    e.preventDefault();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador Publicaciones LinkedIn</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f8; padding: 40px; text-align: center; }
+    .form-container { background: #fff; padding: 30px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+    input, textarea, button { width: 100%; margin-top: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+    button { background: #854fff; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #6b3fd4; }
+  </style>
+</head>
+<body>
 
-    const email = document.getElementById("email").value;
-    const tema = document.getElementById("tema").value;
-    const objetivo = document.getElementById("objetivo").value;
+  <div class="form-container">
+    <h2>Generador de publicaciones para LinkedIn</h2>
+    <p>Rellena los campos y genera tu publicación automáticamente.</p>
 
-    fetch("https://paneln8n.jelge.vip/webhook/f7dd391f-4f62-416a-90b3-4c40416675f1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "Email": email,
-        "Tema de la publicación": tema,
-        "Público Objetivo": objetivo
+    <form id="fake-form">
+      <input type="email" id="email" placeholder="Tu correo" required>
+      <input type="text" id="tema" placeholder="Tema de la publicación" required>
+      <input type="text" id="objetivo" placeholder="Público objetivo" required>
+      <button type="submit">Generar publicación</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("fake-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const tema = document.getElementById("tema").value;
+      const objetivo = document.getElementById("objetivo").value;
+
+      fetch("https://paneln8n.jelge.vip/webhook/7fd3919f-4f62-416a-90b3-4c04841657f1", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "Email": email,
+          "Tema de la publicación": tema,
+          "Público Objetivo": objetivo
+        })
       })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.url) {
-        window.location.href = data.url; // redirige automáticamente
-      } else {
-        alert("No se generó la URL correctamente.");
-      }
-    })
-    .catch(err => {
-      alert("❌ Error al enviar los datos");
+      .then(res => res.json())
+      .then(data => {
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          alert("❌ No se generó la URL correctamente.");
+        }
+      })
+      .catch(err => {
+        alert("❌ Error al enviar los datos");
+      });
     });
-  });
-</script>
+  </script>
+</body>
+</html>
