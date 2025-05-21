@@ -1,0 +1,32 @@
+<script>
+  document.getElementById("fake-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const tema = document.getElementById("tema").value;
+    const objetivo = document.getElementById("objetivo").value;
+
+    fetch("https://paneln8n.jelge.vip/webhook/f7dd391f-4f62-416a-90b3-4c40416675f1", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "Email": email,
+        "Tema de la publicación": tema,
+        "Público Objetivo": objetivo
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.url) {
+        window.location.href = data.url; // redirige automáticamente
+      } else {
+        alert("No se generó la URL correctamente.");
+      }
+    })
+    .catch(err => {
+      alert("❌ Error al enviar los datos");
+    });
+  });
+</script>
